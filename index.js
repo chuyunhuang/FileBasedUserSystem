@@ -1,4 +1,4 @@
-const adminService = require('./service/admin')
+const FileService = require('./service/admin')
 const fs = require('fs')
 
 const express = require('express')
@@ -53,9 +53,18 @@ app.get('/class/add', (req, res) => {
 app.get('/class/list', (req, res) => {
   let className = req.query.class
 
-  fs.readFile(`./classes/${className}.json`, (err, data) => {
-    res.send(JSON.parse(data))
+  FileService.fileToJSON(className, (err,data)=>{
+
+    if(err){
+      res.json({error: `Class ${className} doesn't exist`})
+      return;
+    }
+    res.send(data)
   })
+  
+  // fs.readFile(`./classes/${className}.json`, (err, data) => {
+  //   res.send(JSON.parse(data))
+  // })
 })
 
 // List failing student
